@@ -647,6 +647,7 @@ th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; t
 
   /* ---------- Routing ---------- */
   var view = "quiz";
+  var lastKey = null;
   function setView(v) {
     view = v;
     document.getElementById("tab-quiz").setAttribute("aria-current", v === "quiz" ? "page" : "false");
@@ -656,9 +657,12 @@ th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; t
   }
   function render() {
     if (view === "log") { renderLogShell(); return; }
+    var y = window.scrollY, key = S.screen + ":" + S.qi;
     var node = S.screen === "setup" ? renderSetup() : S.screen === "q" ? renderQuestion() : renderResult();
     app.replaceChildren(node);
-    if (S.screen !== "setup") window.scrollTo({ top: 0 });
+    if (key === lastKey) window.scrollTo({ top: y });
+    else if (S.screen !== "setup") window.scrollTo({ top: 0 });
+    lastKey = key;
   }
   document.getElementById("tab-quiz").addEventListener("click", function () { setView("quiz"); });
   document.getElementById("tab-log").addEventListener("click", function () { setView("log"); });
