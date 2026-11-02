@@ -371,26 +371,17 @@ th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; t
   /* ---------- Screens ---------- */
   function renderSetup() {
     var dateIn = h("input", { type: "date", id: "f-date", min: "1900-01-01", max: new Date().toISOString().slice(0, 10), required: true });
-    var labelIn = h("input", { type: "text", id: "f-label", maxlength: "40", placeholder: "Optional, for the test log" });
+    var labelIn = h("input", { type: "text", id: "f-label", maxlength: "40", placeholder: "Jennifer - 1" });
     var sel = h("select", { id: "f-window" },
       h("option", { value: "" }, "Choose one"),
       WINDOWS.map(function (w, i) { return h("option", { value: String(i) }, w.label); }),
       h("option", { value: "day" }, "Daytime, not sure of the hours (about 6 am to 6 pm)"),
       h("option", { value: "night" }, "Night, not sure of the hours (about 6 pm to 6 am)"),
       h("option", { value: "none" }, "I have no idea"));
-    var placeIn = h("input", { type: "text", id: "f-place", list: "cities", autocomplete: "off", placeholder: "Start typing a city" });
-    var dl = h("datalist", { id: "cities" }, CITIES.map(function (c) { return h("option", { value: c.name }); }));
-    var nearSel = h("select", { id: "f-near" }, h("option", { value: "" }, "Pick the nearest larger city"),
+    var nearSel = h("select", { id: "f-near" }, h("option", { value: "" }, "Choose a city"),
       CITIES.slice().sort(function (x, y) { return x.name < y.name ? -1 : 1; }).map(function (c) { return h("option", { value: c.name }, c.name); }));
     function byName(n) { for (var i = 0; i < CITIES.length; i++) if (CITIES[i].name.toLowerCase() === n.toLowerCase()) return CITIES[i]; return null; }
-    function resolvePlace() {
-      var typed = placeIn.value.trim();
-      var hit = typed && byName(typed);
-      if (hit) return hit;
-      var near = nearSel.value && byName(nearSel.value);
-      if (near) return { name: (typed || near.name) + (typed ? " (near " + near.name + ")" : ""), lat: near.lat, lon: near.lon, tz: near.tz };
-      return null;
-    }
+    function resolvePlace() { return nearSel.value ? byName(nearSel.value) : null; }
     var err = h("p", { class: "small", style: "color:var(--bad)", role: "alert" });
     var go = h("button", { class: "btn", type: "button", onclick: function () {
       err.textContent = "";
@@ -400,7 +391,7 @@ th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; t
       if (parts[0] < 1900 || new Date(v) > new Date()) { err.textContent = "Enter a valid past date."; return; }
       if (!sel.value) { err.textContent = "Choose a time of day, or pick I have no idea."; return; }
       var place = resolvePlace();
-      if (sel.value !== "none" && !place) { err.textContent = "Choose your birthplace from the list, or pick the nearest larger city, so the time window can be converted to rising signs."; return; }
+      if (sel.value !== "none" && !place) { err.textContent = "Choose the city nearest your birthplace, so the time window can be converted to rising signs."; return; }
       var sun = sunIndex(parts[0], parts[1], parts[2]);
       S = fresh();
       S.label = labelIn.value.trim();
@@ -424,14 +415,11 @@ th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; t
       h("h2", { text: "Estimate your rising sign when you do not know your birth time" }),
       h("p", { text: "You answer questions about how you come across to other people. The tool narrows the field to a few signs, then compares them head to head. The result is an estimate with a confidence level, not a chart." }),
       h("p", { class: "small muted", text: "This is a test version. Your answers stay on your device unless you choose to send your result at the end." }),
-      h("p", { class: "note", text: "First check your birth certificate or hospital record, or ask a parent. Some list the exact time, and then you do not need this." }),
       h("div", { class: "field" }, h("label", { for: "f-date", text: "Birth date" }), dateIn),
       h("div", { class: "field" }, h("label", { for: "f-window", text: "Roughly what time of day were you born?" }), sel),
-      h("div", { class: "field" }, h("label", { for: "f-place", text: "Birthplace" }), placeIn, dl,
-        h("p", { class: "small muted", text: "The same clock hour gives a different rising sign in different places, so this sets which signs fit your time window." })),
-      h("div", { class: "field" }, h("label", { for: "f-near", text: "Not in the list? Choose the nearest larger city" }), nearSel,
-        h("p", { class: "small muted", text: "Anything within about 50 miles works. Type your own town above if you like; the nearest city is what sets the calculation." })),
-      h("div", { class: "field" }, h("label", { for: "f-label", text: "Name or label" }), labelIn),
+      h("div", { class: "field" }, h("label", { for: "f-near", text: "Choose the nearest city to your birthplace" }), nearSel,
+        h("p", { class: "small muted", text: "Anything within about 50 miles works. The same clock hour gives a different rising sign in different places, so this sets which signs fit your time window." })),
+      h("div", { class: "field" }, h("label", { for: "f-label", text: "First name and test number" }), labelIn),
       err,
       h("div", { class: "row" }, go));
   }
@@ -677,6 +665,7 @@ th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; t
 
   render();
 
+  document.querySelector("nav.tabs").hidden = location.hash !== "#log";
   if (location.hash === "#log") { document.getElementById("tab-log").hidden = false; setView("log"); }
 })();
 </script>
