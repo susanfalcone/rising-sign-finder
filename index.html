@@ -104,6 +104,11 @@ th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; t
 .stats div { display: flex; flex-direction: column; }
 .stats b { font-family: var(--f-display); font-size: 1.5rem; font-variant-numeric: tabular-nums; }
 .empty { text-align: left; }
+.places { list-style: none; margin: 6px 0 0; padding: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.places li + li { border-top: 1px solid var(--line); }
+.places button { font: inherit; width: 100%; text-align: left; background: none; color: var(--ink); border: 0; padding: 10px 12px; min-height: 44px; cursor: pointer; }
+.places button:hover, .places button:focus-visible { background: var(--accent-soft); outline: none; }
+.places .none { padding: 10px 12px; color: var(--muted); font-size: 0.875rem; }
 @media (prefers-reduced-motion: no-preference) { .bar > span { transition: width 0.4s ease; } }
 @media (max-width: 480px) { .rank .r { grid-template-columns: 5.5rem minmax(0, 1fr) 3rem; } h1 { font-size: 1.6rem; } }
 </style>
@@ -255,6 +260,23 @@ th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; t
   var CITY_DATA = "New York, NY|40.71|-74.01|America/New_York;Los Angeles, CA|34.05|-118.24|America/Los_Angeles;Chicago, IL|41.88|-87.63|America/Chicago;Houston, TX|29.76|-95.37|America/Chicago;Phoenix, AZ|33.45|-112.07|America/Phoenix;Philadelphia, PA|39.95|-75.17|America/New_York;San Antonio, TX|29.42|-98.49|America/Chicago;San Diego, CA|32.72|-117.16|America/Los_Angeles;Dallas, TX|32.78|-96.80|America/Chicago;San Jose, CA|37.34|-121.89|America/Los_Angeles;Austin, TX|30.27|-97.74|America/Chicago;Jacksonville, FL|30.33|-81.66|America/New_York;Columbus, OH|39.96|-83.00|America/New_York;Charlotte, NC|35.23|-80.84|America/New_York;San Francisco, CA|37.77|-122.42|America/Los_Angeles;Indianapolis, IN|39.77|-86.16|America/Indiana/Indianapolis;Seattle, WA|47.61|-122.33|America/Los_Angeles;Denver, CO|39.74|-104.99|America/Denver;Lone Tree, CO|39.55|-104.87|America/Denver;Aurora, CO|39.73|-104.83|America/Denver;Boulder, CO|40.01|-105.27|America/Denver;Fort Collins, CO|40.59|-105.08|America/Denver;Colorado Springs, CO|38.83|-104.82|America/Denver;Woodbury, NJ|39.84|-75.15|America/New_York;Newark, NJ|40.74|-74.17|America/New_York;Trenton, NJ|40.22|-74.76|America/New_York;Wilmington, DE|39.74|-75.55|America/New_York;Washington, DC|38.91|-77.04|America/New_York;Boston, MA|42.36|-71.06|America/New_York;El Paso, TX|31.76|-106.49|America/Denver;Nashville, TN|36.16|-86.78|America/Chicago;Detroit, MI|42.33|-83.05|America/Detroit;Oklahoma City, OK|35.47|-97.52|America/Chicago;Portland, OR|45.52|-122.68|America/Los_Angeles;Las Vegas, NV|36.17|-115.14|America/Los_Angeles;Memphis, TN|35.15|-90.05|America/Chicago;Louisville, KY|38.25|-85.76|America/Kentucky/Louisville;Baltimore, MD|39.29|-76.61|America/New_York;Milwaukee, WI|43.04|-87.91|America/Chicago;Albuquerque, NM|35.08|-106.65|America/Denver;Tucson, AZ|32.22|-110.97|America/Phoenix;Fresno, CA|36.74|-119.79|America/Los_Angeles;Sacramento, CA|38.58|-121.49|America/Los_Angeles;Kansas City, MO|39.10|-94.58|America/Chicago;Atlanta, GA|33.75|-84.39|America/New_York;Omaha, NE|41.26|-95.93|America/Chicago;Raleigh, NC|35.78|-78.64|America/New_York;Miami, FL|25.76|-80.19|America/New_York;Minneapolis, MN|44.98|-93.27|America/Chicago;Tulsa, OK|36.15|-95.99|America/Chicago;Cleveland, OH|41.50|-81.69|America/New_York;New Orleans, LA|29.95|-90.07|America/Chicago;Tampa, FL|27.95|-82.46|America/New_York;Orlando, FL|28.54|-81.38|America/New_York;Honolulu, HI|21.31|-157.86|Pacific/Honolulu;Anchorage, AK|61.22|-149.90|America/Anchorage;Salt Lake City, UT|40.76|-111.89|America/Denver;Pittsburgh, PA|40.44|-79.99|America/New_York;Cincinnati, OH|39.10|-84.51|America/New_York;St. Louis, MO|38.63|-90.20|America/Chicago;Boise, ID|43.62|-116.20|America/Boise;Buffalo, NY|42.89|-78.88|America/New_York;Richmond, VA|37.54|-77.44|America/New_York;Hartford, CT|41.76|-72.68|America/New_York;Providence, RI|41.82|-71.41|America/New_York;Des Moines, IA|41.59|-93.62|America/Chicago;Little Rock, AR|34.75|-92.29|America/Chicago;Birmingham, AL|33.52|-86.80|America/Chicago;Charleston, SC|32.78|-79.93|America/New_York;Toronto, Canada|43.65|-79.38|America/Toronto;Montreal, Canada|45.50|-73.57|America/Toronto;Vancouver, Canada|49.28|-123.12|America/Vancouver;Calgary, Canada|51.05|-114.07|America/Edmonton;Edmonton, Canada|53.55|-113.49|America/Edmonton;Ottawa, Canada|45.42|-75.70|America/Toronto;Winnipeg, Canada|49.90|-97.14|America/Winnipeg;Halifax, Canada|44.65|-63.57|America/Halifax;Mexico City, Mexico|19.43|-99.13|America/Mexico_City;London, UK|51.51|-0.13|Europe/London;Manchester, UK|53.48|-2.24|Europe/London;Edinburgh, UK|55.95|-3.19|Europe/London;Dublin, Ireland|53.35|-6.26|Europe/Dublin;Paris, France|48.86|2.35|Europe/Paris;Berlin, Germany|52.52|13.40|Europe/Berlin;Madrid, Spain|40.42|-3.70|Europe/Madrid;Rome, Italy|41.90|12.50|Europe/Rome;Amsterdam, Netherlands|52.37|4.90|Europe/Amsterdam;Stockholm, Sweden|59.33|18.07|Europe/Stockholm;Athens, Greece|37.98|23.73|Europe/Athens;Lisbon, Portugal|38.72|-9.14|Europe/Lisbon;Vienna, Austria|48.21|16.37|Europe/Vienna;Zurich, Switzerland|47.38|8.54|Europe/Zurich;Moscow, Russia|55.76|37.62|Europe/Moscow;Tokyo, Japan|35.68|139.69|Asia/Tokyo;Seoul, South Korea|37.57|126.98|Asia/Seoul;Beijing, China|39.90|116.41|Asia/Shanghai;Shanghai, China|31.23|121.47|Asia/Shanghai;Hong Kong|22.32|114.17|Asia/Hong_Kong;Singapore|1.35|103.82|Asia/Singapore;Mumbai, India|19.08|72.88|Asia/Kolkata;Delhi, India|28.61|77.21|Asia/Kolkata;Bangkok, Thailand|13.76|100.50|Asia/Bangkok;Dubai, UAE|25.20|55.27|Asia/Dubai;Tel Aviv, Israel|32.09|34.78|Asia/Jerusalem;Manila, Philippines|14.60|120.98|Asia/Manila;Sydney, Australia|-33.87|151.21|Australia/Sydney;Melbourne, Australia|-37.81|144.96|Australia/Melbourne;Auckland, New Zealand|-36.85|174.76|Pacific/Auckland;Sao Paulo, Brazil|-23.55|-46.63|America/Sao_Paulo;Buenos Aires, Argentina|-34.60|-58.38|America/Argentina/Buenos_Aires;Bogota, Colombia|4.71|-74.07|America/Bogota;Lima, Peru|-12.05|-77.04|America/Lima;Cairo, Egypt|30.04|31.24|Africa/Cairo;Johannesburg, South Africa|-26.20|28.05|Africa/Johannesburg;Lagos, Nigeria|6.52|3.38|Africa/Lagos;Nairobi, Kenya|-1.29|36.82|Africa/Nairobi";
   var CITIES = CITY_DATA.split(";").map(function (r) { var f = r.split("|"); return { name: f[0], lat: +f[1], lon: +f[2], tz: f[3] }; });
 
+  function fold(t) { return t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/,/g, ""); }
+  var CITY_LIST = CITIES.map(function (c) { return { name: c.name, lat: c.lat, lon: c.lon, tz: c.tz, k: fold(c.name) }; });
+  if (window.fetch) {
+    fetch("cities.json").then(function (r) { return r.json(); }).then(function (d) {
+      CITY_LIST = d.c.map(function (r) { var n = r[0] + ", " + r[1]; return { name: n, lat: r[2], lon: r[3], tz: d.tz[r[4]], k: fold(n) }; });
+    }).catch(function () {});
+  }
+  function searchCities(q) {
+    q = fold(q.trim());
+    var pre = [], mid = [];
+    for (var i = 0; i < CITY_LIST.length && pre.length < 8; i++) {
+      var k = CITY_LIST[i].k, at = k.indexOf(q);
+      if (at === 0) pre.push(CITY_LIST[i]); else if (at > 0 && mid.length < 8) mid.push(CITY_LIST[i]);
+    }
+    return pre.concat(mid).slice(0, 8);
+  }
+
   function tzOffset(ms, tz) {
     var f = new Intl.DateTimeFormat("en-US", { timeZone: tz, hourCycle: "h23", year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric" });
     var o = {};
@@ -378,10 +400,26 @@ th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; t
       h("option", { value: "day" }, "Daytime, not sure of the hours (about 6 am to 6 pm)"),
       h("option", { value: "night" }, "Night, not sure of the hours (about 6 pm to 6 am)"),
       h("option", { value: "none" }, "I have no idea"));
-    var nearSel = h("select", { id: "f-near" }, h("option", { value: "" }, "Choose a city"),
-      CITIES.slice().sort(function (x, y) { return x.name < y.name ? -1 : 1; }).map(function (c) { return h("option", { value: c.name }, c.name); }));
-    function byName(n) { for (var i = 0; i < CITIES.length; i++) if (CITIES[i].name.toLowerCase() === n.toLowerCase()) return CITIES[i]; return null; }
-    function resolvePlace() { return nearSel.value ? byName(nearSel.value) : null; }
+    var chosen = null;
+    var placeIn = h("input", { type: "text", id: "f-near", autocomplete: "off", placeholder: "Start typing a city", role: "combobox", "aria-expanded": "false", "aria-controls": "f-near-list", "aria-autocomplete": "list" });
+    var listEl = h("ul", { id: "f-near-list", class: "places", role: "listbox", hidden: true });
+    function pickCity(c) { chosen = c; placeIn.value = c.name; listEl.hidden = true; placeIn.setAttribute("aria-expanded", "false"); }
+    function showMatches() {
+      chosen = null;
+      var q = placeIn.value;
+      if (q.trim().length < 2) { listEl.hidden = true; placeIn.setAttribute("aria-expanded", "false"); return []; }
+      var res = searchCities(q);
+      listEl.replaceChildren.apply(listEl, res.length ? res.map(function (c) {
+        return h("li", { role: "option" }, h("button", { type: "button", onclick: function () { pickCity(c); } }, c.name));
+      }) : [h("li", { class: "none", text: "No match. Try a larger city nearby." })]);
+      listEl.hidden = false; placeIn.setAttribute("aria-expanded", "true");
+      return res;
+    }
+    placeIn.addEventListener("input", showMatches);
+    placeIn.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); var r = showMatches(); if (r.length) pickCity(r[0]); }
+    });
+    function resolvePlace() { return chosen; }
     var err = h("p", { class: "small", style: "color:var(--bad)", role: "alert" });
     var go = h("button", { class: "btn", type: "button", onclick: function () {
       err.textContent = "";
@@ -391,7 +429,7 @@ th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; t
       if (parts[0] < 1900 || new Date(v) > new Date()) { err.textContent = "Enter a valid past date."; return; }
       if (!sel.value) { err.textContent = "Choose a time of day, or pick I have no idea."; return; }
       var place = resolvePlace();
-      if (sel.value !== "none" && !place) { err.textContent = "Choose the city nearest your birthplace, so the time window can be converted to rising signs."; return; }
+      if (sel.value !== "none" && !place) { err.textContent = "Type the city nearest your birthplace and tap it in the list, so the time window can be converted to rising signs."; return; }
       var sun = sunIndex(parts[0], parts[1], parts[2]);
       S = fresh();
       S.label = labelIn.value.trim();
@@ -417,8 +455,8 @@ th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; t
       h("p", { class: "small muted", text: "This is a test version. Your answers stay on your device unless you choose to send your result at the end." }),
       h("div", { class: "field" }, h("label", { for: "f-date", text: "Birth date" }), dateIn),
       h("div", { class: "field" }, h("label", { for: "f-window", text: "Roughly what time of day were you born?" }), sel),
-      h("div", { class: "field" }, h("label", { for: "f-near", text: "Choose the nearest city to your birthplace" }), nearSel,
-        h("p", { class: "small muted", text: "Anything within about 50 miles works. The same clock hour gives a different rising sign in different places, so this sets which signs fit your time window." })),
+      h("div", { class: "field" }, h("label", { for: "f-near", text: "Choose the nearest city to your birthplace" }), placeIn, listEl,
+        h("p", { class: "small muted", text: "Start typing, then tap your city in the list. Anything within about 50 miles works. The same clock hour gives a different rising sign in different places, so this sets which signs fit your time window." })),
       h("div", { class: "field" }, h("label", { for: "f-label", text: "First name and test number" }), labelIn),
       err,
       h("div", { class: "row" }, go));
