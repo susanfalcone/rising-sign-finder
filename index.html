@@ -152,33 +152,7 @@ th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; t
   ];
 
   var HEAD = [
-    { id: "D1", w: 1, q: "In the first minute with one new person, you tend to...", lines: [
-      "Get straight to the point, say what is on your mind, and bring contagious enthusiasm",
-      "Be calm and courteous, a little shy at first, and not push your opinions",
-      "Talk with your hands, ask lots of questions, and move quickly between topics",
-      "Pick up how the other person feels right away, stay reserved, and let them close slowly",
-      "Be warm, big and funny, make the exchange feel like fun, and expect to be noticed",
-      "Be polite and a little shy, take everything in, and show less than you feel",
-      "Be gracious and easy to get along with, and make the other person feel comfortable",
-      "Be charming and witty, but let them do most of the talking while you quietly read them",
-      "Be frank and open, ask what they think about big ideas, and let them know exactly where you stand",
-      "Be quiet and reserved with strangers, serious, then lively and warm once you open up",
-      "Make friends easily, be lively and original in conversation, and feel fine standing out",
-      "Be friendly and sociable, taking on the mood of whoever you are with" ] },
-    { id: "D2", w: 1, q: "Walking into a room of strangers, you tend to...", lines: [
-      "Take charge: suggest where to go and what to do, and like being noticed",
-      "Find a comfortable, familiar spot and settle in without hurry",
-      "Move around the room, talk with many people briefly, and find it hard to sit still",
-      "Sense the mood of the room at once and stay near what feels safe before connecting with one or two people",
-      "Take up space, so people notice you and you take command of the room's energy",
-      "Take in everything, notice what is out of order, and start helping",
-      "Move through the room greeting people, making sure everyone feels included",
-      "Stay out of the spotlight, watch who is talking to whom, and file it away for later",
-      "Head for the liveliest conversation, make friends quickly, and get restless if it stays shallow",
-      "Stay a little apart, composed, and look for the useful conversation",
-      "Mix easily but stay slightly apart, drawn to the unusual person or idea",
-      "Soak up the atmosphere, get lively once warmed up, and sometimes drift into your own world" ] },
-    { id: "D3", w: 0.75, q: "When someone you do not know well criticizes you or openly disagrees with you, your first reaction is to...", lines: [
+    { id: "D3", w: 1, q: "When someone you do not know well criticizes you or openly disagrees with you, your first reaction is to...", lines: [
       "Push back right away and say it plainly",
       "Dig in and stay put, slow to anger, and not forgive being ridiculed",
       "React quickly, talk your way through it, and bounce back fast",
@@ -191,7 +165,7 @@ th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; t
       "Go stoic and formal, hide the resentment, and not forget the injury",
       "Step back, get sarcastic or funny, and hold your position",
       "Take on the tension, get moody or overwhelmed, or retreat into your own world" ] },
-    { id: "D4", w: 0.5, q: "How do you think you come across to people?", lines: [
+    { id: "D4", w: 2, q: "How do you think you come across to people?", lines: [
       "Warm, optimistic, a can-do person who moves fast",
       "Kind, gentle, someone people can count on",
       "Easy to talk to, curious, and versatile",
@@ -204,20 +178,7 @@ th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; t
       "Capable, in charge, someone who gets things done",
       "Original, ahead of the curve, a bit unconventional",
       "Gentle, sensitive, intuitive" ] },
-    { id: "D5", w: 1, q: "How would a friend describe the way you move and carry yourself?", lines: [
-      "Quick and energetic, always in a rush, and sometimes bumping into things",
-      "Slow, steady and solid, never in a hurry",
-      "Always moving: talking with your hands, eyes darting around, hard to sit still",
-      "Easygoing and unhurried, with a relaxed, rolling walk",
-      "Upright and dignified, with a proud, confident bearing",
-      "Modest and gentle, taking in everything around you with a sweep of your eyes",
-      "Graceful and balanced, with a warm, easy smile",
-      "Quick and decisive when you move, with a steady, intense gaze",
-      "Big gestures with your arms and hands, and an active, energetic body",
-      "Composed and deliberate, moving at a steady, sure pace",
-      "A faraway, thoughtful look, but very animated when talking about an idea",
-      "Soft and flowing, with a dreamy look that sometimes drifts away" ] },
-    { id: "D6a", w: 1.5, q: "What have strangers or new acquaintances said about their first impression of you?", lines: [
+    { id: "D6a", w: 1, q: "What have strangers or new acquaintances said about their first impression of you?", lines: [
       "Direct, enthusiastic, hard to keep up with",
       "Calm, kind, easygoing",
       "Restless, quick, talkative",
@@ -230,7 +191,7 @@ th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; t
       "Capable, serious, a leader who knows what they are doing",
       "Original, ahead of the curve, hard to categorize",
       "Sensitive, intuitive, gentle" ] },
-    { id: "D6b", w: 1.5, q: "What do people often get wrong about you at first?", lines: [
+    { id: "D6b", w: 1, q: "What do people often get wrong about you at first?", lines: [
       "People think you are too fast and forceful, when you are really warm and full of energy",
       "People see you as endlessly helpful, and overlook that you have needs of your own",
       "People think you are flighty or not sincere, when you are really just curious",
@@ -247,7 +208,7 @@ th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; t
   var MAX_SCORE = HEAD.reduce(function (s, d) { return s + d.w * 2; }, 0);
 
   /* ---------- Logic ---------- */
-  var SCREEN = ["D1", "D3", "D6a"];
+  var SCREEN = ["D3", "D4", "D6a"];
   function screenSeq() { return HEAD.filter(function (d) { return SCREEN.indexOf(d.id) >= 0; }).map(function (d) { return { kind: "S", d: d }; }); }
   function sunIndex(y, m, d) {
     var n = (Date.UTC(y, m - 1, d, 12) - Date.UTC(2000, 0, 1, 12)) / 86400000;
@@ -340,9 +301,8 @@ th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; t
     });
     var rank = S.cands.map(function (c) { return { sign: c, score: score[c] }; }).sort(function (a, b) { return b.score - a.score; });
     var margin = rank.length > 1 ? (rank[0].score - rank[1].score) / MAX_SCORE : 1;
-    var label = margin >= 0.25 ? "Strong" : margin >= 0.10 ? "Likely" : "Too close to call";
+    var label = margin >= 0.20 ? "Likely" : "Too close to call";
     var sunTop = rank[0].sign === S.sun;
-    if (sunTop && label === "Strong") label = "Likely";
     return { rank: rank, margin: margin, label: label, none: none, sunPicks: sunPicks, sunTop: sunTop };
   }
 
@@ -598,7 +558,7 @@ th { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.06em; t
       answers[k] = { c: p.c, a: p.a, none: !!p.none };
     });
     var doc = {
-      v: 1, bank: 5, screening: S.screenScores || null, sunTop: R.sunTop, daypart: S.daypart || null, createdAt: Date.now(), label: S.label, sun: SIGNS[S.sun].n, cusp: S.cusp, path: S.path,
+      v: 1, bank: 6, screening: S.screenScores || null, sunTop: R.sunTop, daypart: S.daypart || null, createdAt: Date.now(), label: S.label, sun: SIGNS[S.sun].n, cusp: S.cusp, path: S.path,
       window: S.windowIdx != null ? WINDOWS[S.windowIdx].label : null,
       place: S.place ? S.place.name : null,
       candidates: S.cands.map(function (c) { return SIGNS[c].n; }),
